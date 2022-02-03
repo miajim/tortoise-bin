@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>bin.tortoise.team</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap" rel="stylesheet">
+    
+    <link rel="icon" href="images/favicon.png">
+
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box
+      } 
+
+      html {
+        font-family: 'Ubuntu', sans-serif;
+        font-size: 1rem;
+        color: #444;
+        background-color: gainsboro;
+        display: block;
+        padding: 10px 30px;
+      }
+
+      h1 {
+        font-size: 2.25rem;
+      }
+
+      p {
+        font-size: 1.2rem;
+        color: steelblue;
+        padding-left: 0.5px;
+      }
+
+      .hide {
+        display: none;
+      }
+    </style>
+  </head>
+  
+  <body>
+    <h1>TortoiseBin</h1>
+    <h3>Click to generate a new bin.</h3>
+    <div id="root"></div>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        let root = document.querySelector('#root');
+        let intro = document.createElement('p');
+        intro.classList.add('textualContent');
+        intro.textContent = 'Bins are empemeral .';
+
+        root.appendChild(intro);
+      });
+    </script>
+  </body>
+</html>
