@@ -24,9 +24,9 @@ function binPath(len) {
 }
 
 // Test route to make sure app is listening on the desired port
-app.get('/', (request, response) => {
-  response.json({ info: 'Node.js, Express, and Postgres API' })
-})
+// app.get('/', (request, response) => {
+//   response.json({ info: 'Node.js, Express, and Postgres API' })
+// })
 
 /*
 - Homepage
@@ -34,7 +34,7 @@ app.get('/', (request, response) => {
 */
 // Homepage, returns static content
 app.get('/', (request, response) => {
-
+  response.sendFile(__dirname + '/public/index.html');
 })
 
 /*
