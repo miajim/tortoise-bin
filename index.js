@@ -3,7 +3,7 @@ const bodyParser = require('body-parser') // middleware that parses incoming req
 const app = express()
 const { pool } = require('./config')  // Enables connection to postgres
 const cors = require('cors')          // Helps us avoid cors issues
-const port = 3000
+const port = 3005
 
 // We might need to get rid of the middleware in order to get the raw. Not sure about this
 app.use(bodyParser.json())
