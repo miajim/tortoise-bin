@@ -1,9 +1,12 @@
 const express = require('express')
 const bodyParser = require('body-parser') // middleware that parses incoming requests
+const hbs = require('hbs') //handlebars
 const app = express()
 const { pool } = require('./config')  // Enables connection to postgres
 const cors = require('cors')          // Helps us avoid cors issues
 const port = 3005
+
+app.set('view engine', 'hbs'); // handlebars
 
 // We might need to get rid of the middleware in order to get the raw. Not sure about this
 app.use(bodyParser.json())
@@ -14,7 +17,6 @@ app.use(
 )
 app.use(cors())
 
-
 function binPath(len) {
   return [...Array(len)]
     .map(() => Math.random()
@@ -23,18 +25,8 @@ function binPath(len) {
     .toUpperCase();
 }
 
-// Test route to make sure app is listening on the desired port
-// app.get('/', (request, response) => {
-//   response.json({ info: 'Node.js, Express, and Postgres API' })
-// })
-
-/*
-- Homepage
-  - Return html with create request bin button
-*/
-// Homepage, returns static content
 app.get('/', (request, response) => {
-  response.sendFile(__dirname + '/public/index.html');
+  response.render('index')
 })
 
 /*
@@ -64,7 +56,7 @@ app.post('/createBin', (request, response) => {
       throw error
     }
 
-    response.status(201).json({ status: "success", message: "New bin created" })
+    response.status(308).redirect(`/r/${newBinPath}/all`);
   });
 
 })
@@ -87,8 +79,8 @@ app.post('/createBin', (request, response) => {
 
 // This is the endpoint for the webhook
 app.post('/r/:bin_path', (request, response) => {
-  const path = request.params.bin_path;
-  const queryExistsString = `SELECT bin_id, bin_path FROM bins WHERE bin_path='${path}'`
+  const binPath = request.params.bin_path;
+  const queryExistsString = `SELECT bin_id, bin_path FROM bins WHERE bin_path='${binPath}'`
 
   pool.query(queryExistsString, (error, results) => {
     console.log(results.rows);
@@ -129,9 +121,43 @@ app.post('/r/:bin_path', (request, response) => {
 // Route that will display all the requests associated with a bin_path
 // Will have to query DB and then use templating to generate HTML and return that as response
 // This is when one of thise templating engines comes in
-app.get('/:bin_path?inspect', (request, response) => {
 
+/*
+- Get all requests from bin path
+  - Query the database for the requests associated with the bin path
+    - Query for request_type, request_origin_ip, time_received, headers, request_payload
+  - We need to build an object that we can pass to handlebars
+
+*/ 
+
+app.get('/r/:bin_path/all', (request, response) => {
+  console.log(request.params);
+  const binPath = request.params.bin_path;
+  const fullURL = `https://${request.hostname}/r/${binPath}`;
+
+  console.log(fullURL);
+
+  const queryString = `SELECT request_type, request_origin_ip, time_received, headers, request_payload FROM requests
+  JOIN bins ON requests.bin_id = bins.bin_id
+  WHERE bins.bin_path = '${binPath}';`
+
+  pool.query(queryString, (error, results) => {
+    const queryResults = JSON.stringify(results.rows, null, 2);
+
+    const logs = { binPath: fullURL, queryResults: queryResults, }
+    // console.log(logs);
+    response.render('binRequest', logs);
+    // response.status(200).json(results.rows);
+  });
+
+  // response.status(200).json("hello");
 })
+// let binTest = {
+//   bin_id : 26
+// }
+// app.get('/r/:bin_path', (request, response) => {
+//   response.render('binRequests', {binTest : binTest})
+// })
 
 // Test route just to make sure we can query the DB Charles made
 app.get('/bins', (request, response) => {
