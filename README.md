@@ -1,2 +1,2 @@
 ## tortoise-bin
-### A webhook notification endpoint Bin utilizing Node.js, Express and PostgreSQL.
+### A simple tool to inspect and debug webhook requests built with Node.js, Express and PostgreSQL.
