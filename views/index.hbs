@@ -1,21 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Tortoise Bin</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-  <style>
-    body { padding-top: 50px; }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <div class="jumbotron">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Tortoise Bin</title>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.css">
+  
+    <style>
+      html {
+        display: block;
+        padding: 60px 100px;
+      }
+
+      h1 {
+        font-size: 5rem;
+      }
+
+      h5 {
+        font-size: 2rem;
+      }
+
+      .button, button, input[type='button'], input[type='reset'], input[type='submit'] {
+        background-color: #bf0603;
+        border: 0.1rem solid #bf0603;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
       <h1>Tortoise Bin</h1>
+      <h5>A simple tool to inspect and debug webhook requests.</h5>
       <form method="post" action="/createBin">
-        <button id="create-btn" type="submit" class="btn btn-success">Create a bin</button>
+        <button id="create-btn" type="submit" class="button">Create a bin</button>
       </form>
     </div>
-  </div>
-</body>
+  </body>
 </html>
