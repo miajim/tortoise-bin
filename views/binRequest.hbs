@@ -16,11 +16,16 @@
         <style>
             html {
                 display: block;
-                padding: 60px 100px;
+                padding: 75px 100px;
             }
 
             pre {
+                font-size: 1.4rem;
                 border-left: 0.3rem solid #bf0603;
+            }
+
+            .bin-path {
+                color:  #bf0603;
             }
         </style>
     </head>
@@ -29,11 +34,10 @@
         <div class="container">
             <header>
                 <h2>Requests</h2>
-                <p>Your Tortoise Bin endpoint is: <strong>{{binPath}}</strong>
-                </p>
+                <h4>Your TortoiseBin endpoint is: <span class="bin-path">{{binPath}}</span></h4>
             </header>
             <section>
-                <h2>All requests sent to your bin</h2>
+                <h4>All requests sent to your bin:</h4>
                 <pre>{{queryResults}}</pre>
             </section>
         </div>
