@@ -1,18 +1,17 @@
-const express = require('express');
-const favicon = require('serve-favicon');
-const path = require('path');
-const bodyParser = require('body-parser'); // middleware that parses incoming requests
-// const hbs = require('hbs');             // handlebars (this require not needed)
+const express = require("express");
+const favicon = require("serve-favicon");
+const path = require("path");
+const bodyParser = require("body-parser"); // middleware that parses incoming requests
 
 const app = express();
 
-const { pool } = require('./config');      // Enables connection to postgres
-const cors = require('cors');              // Helps us avoid cors issues
+const { pool } = require("./config"); // Enables connection to postgres
+const cors = require("cors"); // Helps us avoid cors issues
 const port = 3005;
 
-app.set('view engine', 'hbs');            // handlebars
+app.set("view engine", "hbs"); // handlebars
 
-app.use(favicon(path.join(__dirname, 'public/images', 'favicon.png')));
+app.use(favicon(path.join(__dirname, "public/images", "favicon.png")));
 
 app.use(bodyParser.json());
 app.use(
@@ -25,18 +24,17 @@ app.use(cors());
 
 function binPath(len) {
   return [...Array(len)]
-    .map(() => Math.random()
-      .toString(36)[2])
-    .join('')
+    .map(() => Math.random().toString(36)[2])
+    .join("")
     .toUpperCase();
 }
 
-app.get('/', (request, response) => {
-  response.render('index');
+app.get("/", (request, response) => {
+  response.render("index");
 });
 
 // Creation of new bin
-app.post('/createBin', (request, response) => {
+app.post("/createBin", (request, response) => {
   const newBinPath = binPath(8);
   const timestamp = Date.now();
   const queryString = `INSERT INTO bins (bin_path, creation_time) VALUES ($1, (to_timestamp(${timestamp} / 1000.0)))`;
@@ -51,16 +49,17 @@ app.post('/createBin', (request, response) => {
 });
 
 // This is the endpoint for the webhook
-app.post('/r/:bin_path', (request, response) => {
+app.post("/r/:bin_path", (request, response) => {
   const binPath = request.params.bin_path;
   const queryExistsString = `SELECT bin_id, bin_path FROM bins WHERE bin_path='${binPath}'`;
 
   pool.query(queryExistsString, (error, results) => {
     console.log(results.rows);
     if (results.rows.length === 0) {
-      response.status(404).json({status: "fail", message: "bin does not exist"});
+      response
+        .status(404)
+        .json({ status: "fail", message: "bin does not exist" });
     } else {
-
       let binID = results.rows[0].bin_id;
 
       console.log(binID);
@@ -80,13 +79,15 @@ app.post('/r/:bin_path', (request, response) => {
           throw error;
         }
 
-        response.status(201).json({ status: "success", message: "New request added" });
+        response
+          .status(201)
+          .json({ status: "success", message: "New request added" });
       });
     }
   });
 });
 
-app.get('/r/:bin_path/all', (request, response) => {
+app.get("/r/:bin_path/all", (request, response) => {
   console.log(request.params);
   const binPath = request.params.bin_path;
   const fullURL = `https://${request.hostname}/r/${binPath}`;
@@ -99,15 +100,15 @@ app.get('/r/:bin_path/all', (request, response) => {
 
   pool.query(queryString, (error, results) => {
     const queryResults = JSON.stringify(results.rows, null, 2);
-    const logs = { binPath: fullURL, queryResults: queryResults, };
-    response.render('binRequest', logs);
+    const logs = { binPath: fullURL, queryResults: queryResults };
+    response.render("binRequest", logs);
     // response.status(200).json(results.rows);
   });
 });
 
-// Test route just to make sure we can query the DB Charles made
-app.get('/bins', (request, response) => {
-  pool.query('SELECT * FROM bins', (error, results) => {
+// Test route just to make sure we can query the DB
+app.get("/bins", (request, response) => {
+  pool.query("SELECT * FROM bins", (error, results) => {
     if (error) {
       throw error;
     }
